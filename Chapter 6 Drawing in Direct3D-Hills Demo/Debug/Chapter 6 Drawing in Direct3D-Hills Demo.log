@@ -1,0 +1,14 @@
+﻿  Performing Custom Build Tools
+  Microsoft (R) Direct3D Shader Compiler 6.3.9600.16384
+  Copyright (C) 2013 Microsoft. All rights reserved.
+  
+CUSTOMBUILD : warning X4717: Effects deprecated for D3DCompiler_47
+  
+  compilation code save succeeded; see color.cod
+  compilation object save succeeded; see E:\Computer Graphics\DX11\Exercises\DX11\Chapter 6 Drawing in Direct3D-Hills Demo\fx\color.fxo
+  main.cpp
+e:\computer graphics\dx11\exercises\dx11\chapter 6 drawing in direct3d-hills demo\main.cpp(70): warning C4305: “初始化”: 从“double”到“float”截断
+e:\computer graphics\dx11\exercises\dx11\chapter 6 drawing in direct3d-hills demo\main.cpp(318): warning C4244: “参数”: 从“std::streamoff”转换到“unsigned int”，可能丢失数据
+e:\computer graphics\dx11\exercises\dx11\chapter 6 drawing in direct3d-hills demo\main.cpp(323): warning C4244: “参数”: 从“std::streamoff”转换到“SIZE_T”，可能丢失数据
+  Chapter 6 Drawing in Direct3D-Hills Demo.vcxproj -> E:\Computer Graphics\DX11\Exercises\DX11\Debug\Chapter 6 Drawing in Direct3D-Hills Demo.exe
+  Chapter 6 Drawing in Direct3D-Hills Demo.vcxproj -> E:\Computer Graphics\DX11\Exercises\DX11\Debug\Chapter 6 Drawing in Direct3D-Hills Demo.pdb (Full PDB)

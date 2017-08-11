@@ -1,0 +1,6 @@
+﻿  geometrygenerator.cpp
+e:\computer graphics\dx11\exercises\dx11\common\geometrygenerator.cpp(136): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+e:\computer graphics\dx11\exercises\dx11\common\geometrygenerator.cpp(143): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+e:\computer graphics\dx11\exercises\dx11\common\geometrygenerator.cpp(150): warning C4244: “参数”: 从“UINT”转换到“float”，可能丢失数据
+  Chapter 6 Drawing in Direct3D-Shapes Demo.vcxproj -> E:\Computer Graphics\DX11\Exercises\DX11\Debug\Chapter 6 Drawing in Direct3D-Shapes Demo.exe
+  Chapter 6 Drawing in Direct3D-Shapes Demo.vcxproj -> E:\Computer Graphics\DX11\Exercises\DX11\Debug\Chapter 6 Drawing in Direct3D-Shapes Demo.pdb (Full PDB)

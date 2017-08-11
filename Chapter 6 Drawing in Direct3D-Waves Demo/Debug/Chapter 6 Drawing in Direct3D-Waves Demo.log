@@ -1,0 +1,6 @@
+﻿  main.cpp
+e:\computer graphics\dx11\exercises\dx11\chapter 6 drawing in direct3d-waves demo\main.cpp(58): warning C4305: “初始化”: 从“double”到“float”截断
+e:\computer graphics\dx11\exercises\dx11\chapter 6 drawing in direct3d-waves demo\main.cpp(396): warning C4244: “参数”: 从“std::streamoff”转换到“unsigned int”，可能丢失数据
+e:\computer graphics\dx11\exercises\dx11\chapter 6 drawing in direct3d-waves demo\main.cpp(401): warning C4244: “参数”: 从“std::streamoff”转换到“SIZE_T”，可能丢失数据
+  Chapter 6 Drawing in Direct3D-Waves Demo.vcxproj -> E:\Computer Graphics\DX11\Exercises\DX11\Debug\Chapter 6 Drawing in Direct3D-Waves Demo.exe
+  Chapter 6 Drawing in Direct3D-Waves Demo.vcxproj -> E:\Computer Graphics\DX11\Exercises\DX11\Debug\Chapter 6 Drawing in Direct3D-Waves Demo.pdb (Full PDB)

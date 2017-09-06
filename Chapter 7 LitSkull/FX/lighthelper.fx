@@ -4,11 +4,6 @@
 // Structures and functions for lighting calculations.
 //***************************************************************************************
 
-
-/********************************************************************************/
-// Exercise 3: Apply discrete functions to kd and ks to achieve toon shading.
-/********************************************************************************/
-
 struct DirectionalLight
 {
 	float4 ambient;
@@ -88,21 +83,6 @@ void ComputeDirectionalLight(Material material, DirectionalLight light,
 	{
         float3 r = reflect(-l, normal);
 		float ks = pow(max(dot(r, to_eye), 0.0f), material.specular.w);
-
-        /******************************/
-        // Exercise 3.
-        /******************************/
-        if(kd<=0.5f)
-            kd = 0.6f;
-        else
-            kd = 1.0f;
-
-        if (ks <= 0.1f)
-            ks = 0.0f;
-        else if (ks <= 0.8f)
-            ks = 0.5f;
-        else
-            ks = 0.8f;
 					
         diffuse = kd * material.diffuse * light.diffuse;
 		specular = ks * material.specular * light.specular;
@@ -150,21 +130,6 @@ void ComputePointLight(Material material, PointLight light, float3 pos, float3 n
 	{
         float3 r = reflect(-l, normal);
 		float ks= pow(max(dot(r, to_eye), 0.0f), material.specular.w);
-
-        /******************************/
-        // Exercise 3.
-        /******************************/
-        if (kd <= 0.5f)
-            kd = 0.6f;
-        else
-            kd = 1.0f;
-
-        if (ks <= 0.1f)
-            ks = 0.0f;
-        else if (ks <= 0.8f)
-            ks = 0.5f;
-        else
-            ks = 0.8f;;
 					
 		diffuse = kd * material.diffuse * light.diffuse;
 		specular = ks * material.specular * light.specular;
@@ -217,21 +182,6 @@ void ComputeSpotLight(Material material, SpotLight light, float3 pos, float3 nor
 	{
         float3 r = reflect(-l, normal);
 		float ks = pow(max(dot(r, to_eye), 0.0f), material.specular.w);
-
-        /******************************/
-        // Exercise 3.
-        /******************************/
-        if (kd <= 0.5f)
-            kd = 0.6f;
-        else
-            kd = 1.0f;
-
-        if (ks <= 0.1f)
-            ks = 0.0f;
-        else if (ks <= 0.8f)
-            ks = 0.5f;
-        else
-            ks = 0.8f;
 					
 		diffuse = kd * material.diffuse * light.diffuse;
 		specular    = ks * material.specular * light.specular;

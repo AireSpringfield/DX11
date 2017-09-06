@@ -9,6 +9,15 @@
 //
 //***************************************************************************************
 
+
+/****************************************************************************/
+// Exercise 1: Assign directional light, point light and spot light to be red, green and blue.
+/****************************************************************************/
+// Exercise 2: Try different specular material's exponent to control shininess.
+/****************************************************************************/
+// Exercise 4: Use 1 or 2 to control spot light's angle.
+/****************************************************************************/
+
 #include"d3dApp.h"
 #include"d3dx11effect.h"
 #include"geometrygenerator.h"
@@ -88,7 +97,7 @@ private:
 
 	XMFLOAT3 eye_pos_world_ = XMFLOAT3(0.0f, 0.0f, 0.0f);
 
-	float theta_ = 1.5*XM_PI;
+	float theta_ = 1.5f*XM_PI;
 	float phi_ = XM_PI / 6.0f;
 	float radius_ = 15.0f; // radius_ == 0 will lead to error in XMMatrixLookAtLH
 
@@ -117,6 +126,8 @@ LightingApp::LightingApp(HINSTANCE hInstance):D3DApp(hInstance){
 
 	XMStoreFloat4x4(&waves_world_, XMMatrixTranslation(0.0f, -3.0f, 0.0f));
 
+
+
 	// Directional light.
 	dir_light_.ambient  = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 	dir_light_.diffuse  = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
@@ -138,13 +149,39 @@ LightingApp::LightingApp(HINSTANCE hInstance):D3DApp(hInstance){
 	spot_light_.spot     = 96.0f;
 	spot_light_.range    = 10000.0f;
 
+
+	/*************************/
+	// Exercise 1.
+	/*************************/
+	/*
+	// Directional light: red.
+	dir_light_.ambient = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+	dir_light_.diffuse = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+	dir_light_.specular = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+
+	// Point light: green.
+	point_light_.ambient = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	point_light_.diffuse = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	point_light_.specular = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+
+	// Spot light: blue.
+	spot_light_.ambient = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+	spot_light_.diffuse = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+	spot_light_.specular = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+	*/
+
+	/*******************************************************/
+	// Exercise 2.
+	/*******************************************************/
 	land_material_.ambient  = XMFLOAT4(0.48f, 0.77f, 0.46f, 1.0f);
 	land_material_.diffuse  = XMFLOAT4(0.48f, 0.77f, 0.46f, 1.0f);
-	land_material_.specular = XMFLOAT4(0.2f, 0.2f, 0.2f, 16.0f);
+	//land_material_.specular = XMFLOAT4(0.2f, 0.2f, 0.2f, 16.0f);
+	land_material_.specular = XMFLOAT4(0.2f, 0.2f, 0.2f, 64.0f);
 
 	waves_material_.ambient  = XMFLOAT4(0.137f, 0.42f, 0.556f, 1.0f);
 	waves_material_.diffuse  = XMFLOAT4(0.137f, 0.42f, 0.556f, 1.0f);
-	waves_material_.specular = XMFLOAT4(0.8f, 0.8f, 0.8f, 96.0f);
+	//waves_material_.specular = XMFLOAT4(0.8f, 0.8f, 0.8f, 96.0f);
+	waves_material_.specular = XMFLOAT4(0.8f, 0.8f, 0.8f, 256.0f);
 }
 
 LightingApp::~LightingApp()
@@ -248,6 +285,16 @@ void LightingApp::UpdateScene(float dt)
 	// like we are holding a flashlight.
 	spot_light_.position = eye_pos_world_;
 	XMStoreFloat3(&spot_light_.direction, XMVector3Normalize(target - pos));
+	
+	/******************************************************/
+	// Exercise 4: Use key 1 or 2 to control spot light's angle.
+	/******************************************************/
+	if (GetAsyncKeyState('1') & 0x8000)
+		spot_light_.spot += 5.0f;
+
+	if (GetAsyncKeyState('2') & 0x8000)
+		spot_light_.spot -= 5.0f;
+
 }
 
 void LightingApp::DrawScene()

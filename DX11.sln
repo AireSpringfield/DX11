@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter 4 Direct3D Initialization", "Chapter 4 Direct3D Initialization\Chapter 4 Direct3D Initialization.vcxproj", "{73E3E523-13AD-48A9-92F5-4725C527AC4E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter 6 Drawing in Direct3D-Box Demo", "Chapter 6 Drawing in Direct3D\Chapter 6 Drawing in Direct3D.vcxproj", "{8B27E61D-FA9D-4183-A661-E9B00118C209}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter 6 Drawing in Direct3D-Box Demo", "Chapter 6 Drawing in Direct3D-Box Demo\Chapter 6 Drawing in Direct3D-Box Demo.vcxproj", "{8B27E61D-FA9D-4183-A661-E9B00118C209}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter 6 Drawing in Direct3D-Hills Demo", "Chapter 6 Drawing in Direct3D-Hills Demo\Chapter 6 Drawing in Direct3D-Hills Demo.vcxproj", "{F994903D-6033-466E-A3AF-909039EE5629}"
 EndProject
@@ -14,6 +14,12 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter 6 Drawing in Direct3D-Skull Demo", "Chapter 6 Drawing in Direct3D-Skull Demo\Chapter 6 Drawing in Direct3D-Skull Demo.vcxproj", "{42CCAE18-5190-4E54-9F0C-2661592A70E0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter 6 Drawing in Direct3D-Waves Demo", "Chapter 6 Drawing in Direct3D-Waves Demo\Chapter 6 Drawing in Direct3D-Waves Demo.vcxproj", "{11E07766-036D-4BC9-8427-4951D8A9D0B6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter 7 Lighting", "Chapter 7 Lighting\Chapter 7 Lightning.vcxproj", "{27E3A252-57B2-4A66-892D-98A1793B3CB3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter 7 LitSkull", "Chapter 7 LitSkull\Chapter 7 LitSkull.vcxproj", "{C63E6127-0C72-4FEC-A71B-8C5C7D4C2B30}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter 8 Texturing-Crate", "Chapter 8 Texturing-Crate\Chapter 8 Texturing-Crate.vcxproj", "{01115DB4-E524-4A5B-8911-C5E6B1DAE9B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +77,30 @@ Global
 		{11E07766-036D-4BC9-8427-4951D8A9D0B6}.Release|x64.Build.0 = Release|x64
 		{11E07766-036D-4BC9-8427-4951D8A9D0B6}.Release|x86.ActiveCfg = Release|Win32
 		{11E07766-036D-4BC9-8427-4951D8A9D0B6}.Release|x86.Build.0 = Release|Win32
+		{27E3A252-57B2-4A66-892D-98A1793B3CB3}.Debug|x64.ActiveCfg = Debug|x64
+		{27E3A252-57B2-4A66-892D-98A1793B3CB3}.Debug|x64.Build.0 = Debug|x64
+		{27E3A252-57B2-4A66-892D-98A1793B3CB3}.Debug|x86.ActiveCfg = Debug|Win32
+		{27E3A252-57B2-4A66-892D-98A1793B3CB3}.Debug|x86.Build.0 = Debug|Win32
+		{27E3A252-57B2-4A66-892D-98A1793B3CB3}.Release|x64.ActiveCfg = Release|x64
+		{27E3A252-57B2-4A66-892D-98A1793B3CB3}.Release|x64.Build.0 = Release|x64
+		{27E3A252-57B2-4A66-892D-98A1793B3CB3}.Release|x86.ActiveCfg = Release|Win32
+		{27E3A252-57B2-4A66-892D-98A1793B3CB3}.Release|x86.Build.0 = Release|Win32
+		{C63E6127-0C72-4FEC-A71B-8C5C7D4C2B30}.Debug|x64.ActiveCfg = Debug|x64
+		{C63E6127-0C72-4FEC-A71B-8C5C7D4C2B30}.Debug|x64.Build.0 = Debug|x64
+		{C63E6127-0C72-4FEC-A71B-8C5C7D4C2B30}.Debug|x86.ActiveCfg = Debug|Win32
+		{C63E6127-0C72-4FEC-A71B-8C5C7D4C2B30}.Debug|x86.Build.0 = Debug|Win32
+		{C63E6127-0C72-4FEC-A71B-8C5C7D4C2B30}.Release|x64.ActiveCfg = Release|x64
+		{C63E6127-0C72-4FEC-A71B-8C5C7D4C2B30}.Release|x64.Build.0 = Release|x64
+		{C63E6127-0C72-4FEC-A71B-8C5C7D4C2B30}.Release|x86.ActiveCfg = Release|Win32
+		{C63E6127-0C72-4FEC-A71B-8C5C7D4C2B30}.Release|x86.Build.0 = Release|Win32
+		{01115DB4-E524-4A5B-8911-C5E6B1DAE9B5}.Debug|x64.ActiveCfg = Debug|x64
+		{01115DB4-E524-4A5B-8911-C5E6B1DAE9B5}.Debug|x64.Build.0 = Debug|x64
+		{01115DB4-E524-4A5B-8911-C5E6B1DAE9B5}.Debug|x86.ActiveCfg = Debug|Win32
+		{01115DB4-E524-4A5B-8911-C5E6B1DAE9B5}.Debug|x86.Build.0 = Debug|Win32
+		{01115DB4-E524-4A5B-8911-C5E6B1DAE9B5}.Release|x64.ActiveCfg = Release|x64
+		{01115DB4-E524-4A5B-8911-C5E6B1DAE9B5}.Release|x64.Build.0 = Release|x64
+		{01115DB4-E524-4A5B-8911-C5E6B1DAE9B5}.Release|x86.ActiveCfg = Release|Win32
+		{01115DB4-E524-4A5B-8911-C5E6B1DAE9B5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

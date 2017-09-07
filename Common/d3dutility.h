@@ -42,6 +42,8 @@
 
 #define ReleaseCOM(x) { if(x){ x->Release(); x = NULL; } }
 
+#define SafeDelete(x) { delete x; x=nullptr; }
+
 
 // #define XMGLOBALCONST extern CONST __declspec(selectany)
 //   1. extern so there is only one copy of the variable, and not a separate
@@ -66,5 +68,18 @@ namespace Colors
 
 }
 
+
+#include"DDSTextureLoader.h"
+inline void CreateDDSShaderResourceViewFromFile(ID3D11Device *device, const wchar_t *fileName, ID3D11ShaderResourceView **pShaderResourceView) {
+
+	/***********************/
+	// Note: D3DX deprecated.
+	// https://blogs.msdn.microsoft.com/chuckw/2013/08/20/living-without-d3dx/
+	/***********************/
+	ID3D11Resource *texResource = nullptr;
+	HR(DirectX::CreateDDSTextureFromFile(device, fileName, &texResource, pShaderResourceView));
+	ReleaseCOM(texResource);
+		
+}
 
 #endif

@@ -6,6 +6,19 @@
 #include"effects.h"
 #include"vertex.h"
 #include"geometrygenerator.h"
+#include<sstream>
+
+/************************************************************/
+// Exercise 1: Try different address modes and filters.
+/************************************************************/
+// Exercise 2: Assign mipmapped textures.
+/************************************************************/
+// Exercise 3: Use multitexturing to display flareball effects.
+/************************************************************/
+// Exercise 4: Rotate the texture with time varying.
+/************************************************************/
+// Exercise 5: Fire animation via page flipping.
+/************************************************************/
 
 using namespace DirectX;
 
@@ -37,13 +50,24 @@ private:
 	UINT boxIndexCnt_ = 0;
 
 	ID3D11ShaderResourceView *diffuseMapSRV_ = nullptr;
+	// For exercise 3.
+	ID3D11ShaderResourceView *flare_ = nullptr;
+	ID3D11ShaderResourceView *flareAlpha_ = nullptr;
+	// For exercise 2.
+	ID3D11ShaderResourceView *mipMap_ = nullptr;
+	// For exercise 5.
+	ID3D11ShaderResourceView *fires_[120] = { nullptr };
 
 	DirectionalLight dirLights_[3];
 	Material boxMaterial_;
 
 
+
 	XMFLOAT4X4 texTransform_ = MathHelper::XMFloat4x4Identity();
 	XMFLOAT4X4 boxWorld_ = MathHelper::XMFloat4x4Identity();
+
+	// For exercise 4.
+	float flareRotateDegrees_ = 0.0f;
 
 	XMFLOAT4X4 view_ = MathHelper::XMFloat4x4Identity();
 	XMFLOAT4X4 proj_ = MathHelper::XMFloat4x4Identity();
@@ -91,6 +115,10 @@ CrateApp::CrateApp(HINSTANCE hInstance)
 	boxMaterial_.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	boxMaterial_.specular = XMFLOAT4(0.6f, 0.6f, 0.6f, 16.0f);
 
+	// This is for exercise 1. Magnificate the texture coordinate to test
+	// address modes besides wrap mode.
+	//XMStoreFloat4x4(&texTransform_, XMMatrixScaling(5.0f, 5.0f, 0.0f));
+
 }
 
 
@@ -99,7 +127,18 @@ CrateApp::~CrateApp() {
 	ReleaseCOM(boxIB_);
 	ReleaseCOM(diffuseMapSRV_);
 
-	Effects::DestoryAll();
+	// For exercise 2.
+	ReleaseCOM(mipMap_);
+
+	// For exercise 3.
+	ReleaseCOM(flare_);
+	ReleaseCOM(flareAlpha_);
+	ReleaseCOM(mipMap_);
+	// For exercise 5.
+	for (UINT i = 0; i < 120; ++i)
+		ReleaseCOM(fires_[i]);
+
+	Effects::DestroyAll();
 	InputLayouts::DestroyAll();
 }
 
@@ -111,6 +150,26 @@ bool CrateApp::Init() {
 	InputLayouts::InitAll(device_);
 
 	CreateDDSShaderResourceViewFromFile(device_, L"Textures/WoodCrate01.dds", &diffuseMapSRV_);
+	// For exercise 3.
+	CreateDDSShaderResourceViewFromFile(device_, L"Textures/flare.dds", &flare_);
+	CreateDDSShaderResourceViewFromFile(device_, L"Textures/flarealpha.dds", &flareAlpha_);
+	// For exercise 2.
+	CreateDDSShaderResourceViewFromFile(device_, L"Textures/mipmaps.dds", &mipMap_);
+	// For exercise 5.
+	std::wstring fileName;
+	std::wstringstream ss;
+
+	// To convert bmp to DDS,
+	// See https://github.com/Microsoft/DirectXTex/wiki/Texconv
+	for (UINT i = 0; i < 120; ++i) {
+		ss << L"FireAnim/DDS/Fire";
+		ss.fill('0');
+		ss.width(3); // .width() is only effective for next output
+		ss << i + 1 << ".DDS";
+		ss >> fileName;
+		ss.clear();
+		CreateDDSShaderResourceViewFromFile(device_, fileName.c_str(), fires_ + i);
+	}
 
 
 	BuildGeometryBuffers();
@@ -143,6 +202,25 @@ void CrateApp::UpdateScene(float dt) {
 
 	eyePosInWorld_ = XMFLOAT3(x, y, z);
 
+	/*
+	// For exercise 4.
+
+	// 45 degree per second.
+	flareRotateDegrees_ += 45.0f*dt;
+
+	// Note: the rotation axis must go through the center (0.5, 0.5).
+	XMMATRIX T = XMMatrixTranslation(-0.5f, -0.5f, 0.0f);
+	XMMATRIX R = XMMatrixRotationZ(XMConvertToRadians(flareRotateDegrees_));
+	XMMATRIX M = T*R*(-T);
+	XMStoreFloat4x4(&texTransform_, M);
+	*/
+
+	// During rotation, some texture coordinates will get out of the range
+	// of [0, 1], you can apply BORDER address mode to get rid of unexpected
+	// duplicated flares.
+
+	// The texture coordinate is rotated clockwise, in another word, it looks
+	// like that the texture is rotated counter clockwise.
 
 }
 
@@ -191,6 +269,23 @@ void CrateApp::DrawScene() {
 		Effects::basicFX->SetMaterial(boxMaterial_);
 
 		Effects::basicFX->SetDiffuseMap(diffuseMapSRV_);
+		// For exercise 2.
+		Effects::basicFX->SetMipMap(mipMap_);
+		// For exercise 3.
+		Effects::basicFX->SetFlareMap(flare_);
+		Effects::basicFX->SetFlareAlphaMap(flareAlpha_);
+		// For exercise 5.
+		static UINT fireIndex = 0;
+		static float baseTime = 0.0f;
+		// 30 FPS
+		const static float timePerFrame = 1.0f / 30.0f;
+		if (timer_.TotalTime() - baseTime >= timePerFrame) {
+			baseTime += timePerFrame;
+			fireIndex = (fireIndex + 1) % 120;
+		}
+
+		Effects::basicFX->SetFireMap(fires_[fireIndex]);
+		
 		
 
 		activeTech->GetPassByIndex(p)->Apply(0, immediate_context_);
@@ -203,8 +298,8 @@ void CrateApp::DrawScene() {
 void CrateApp::OnMouseWheel(WPARAM wParam, LPARAM lParam) {
 	short delta = GET_WHEEL_DELTA_WPARAM(wParam);
 	int inc = -delta / WHEEL_DELTA;
-	radius_ += inc*5.0f;
-	radius_ = MathHelper::Clamp(radius_, 0.5f, 100.0f);
+	radius_ += inc*1.0f;
+	radius_ = MathHelper::Clamp(radius_, 0.2f, 100.0f);
 }
 
 void CrateApp::OnMouseUp(WPARAM btnState, int x, int y) {
@@ -239,7 +334,7 @@ void CrateApp::OnMouseMove(WPARAM btnState, int x, int y) {
 		radius_ += dx - dy;
 
 		// Restrict the radius.
-		radius_ = MathHelper::Clamp(radius_, 3.0f, 200.0f);
+		radius_ = MathHelper::Clamp(radius_, 0.2f, 200.0f);
 	}
 
 

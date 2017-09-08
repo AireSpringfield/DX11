@@ -58,6 +58,16 @@ BasicEffect::BasicEffect(ID3D11Device *device, std::wstring compiledFileName)
 	material = fx_->GetVariableByName("gMaterial");
 	
 	diffuseMap = fx_->GetVariableByName("gDiffuseMap")->AsShaderResource();
+
+	// For exercise 2.
+	mipMap = fx_->GetVariableByName("gMipMap")->AsShaderResource();
+
+	// For exercise 3.
+	flare = fx_->GetVariableByName("gFlare")->AsShaderResource();
+	flareAlpha = fx_->GetVariableByName("gFlareAlpha")->AsShaderResource();
+
+	// For exercise 5.
+	fire = fx_->GetVariableByName("gFire")->AsShaderResource();
 }
 
 BasicEffect::~BasicEffect() {
@@ -70,6 +80,6 @@ void Effects::InitAll(ID3D11Device *device) {
 	basicFX = new BasicEffect(device, L"FX/basic.fxo");
 }
 
-void Effects::DestoryAll() {
+void Effects::DestroyAll() {
 	SafeDelete(basicFX);
 }

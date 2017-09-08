@@ -22,13 +22,29 @@ cbuffer cbPerObject
 }
 
 //
-// 2 local object(s)
+// 8 local object(s)
 //
 Texture2D gDiffuseMap;
+Texture2D gFlare;
+Texture2D gFlareAlpha;
+Texture2D gMipMap;
+Texture2D gFire;
 SamplerState samAnisotropic
 {
     Filter   = uint(ANISOTROPIC /* 85 */);
     MaxAnisotropy = uint(4);
+    AddressU = uint(BORDER /* 4 */);
+    AddressV = uint(BORDER /* 4 */);
+};
+SamplerState samPoint
+{
+    Filter   = uint(MIN_MAG_MIP_POINT /* 0 */);
+    AddressU = uint(WRAP /* 1 */);
+    AddressV = uint(WRAP /* 1 */);
+};
+SamplerState samLinear
+{
+    Filter   = uint(MIN_MAG_MIP_LINEAR /* 21 */);
     AddressU = uint(WRAP /* 1 */);
     AddressV = uint(WRAP /* 1 */);
 };
@@ -120,31 +136,31 @@ fxgroup
                 //   o1.x <- <VS return value>.PosW.x; o1.y <- <VS return value>.PosW.y; o1.z <- <VS return value>.PosW.z; 
                 //   o0.x <- <VS return value>.PosH.x; o0.y <- <VS return value>.PosH.y; o0.z <- <VS return value>.PosH.z; o0.w <- <VS return value>.PosH.w
                 //
-                #line 60 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 111 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // r1.x <- vout.PosW.x
                 dp4 r1.y, r0.xyzw, cb0[1].xyzw  // r1.y <- vout.PosW.y
                 dp4 r1.z, r0.xyzw, cb0[2].xyzw  // r1.z <- vout.PosW.z
                 
-                #line 61
+                #line 112
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // r2.x <- vout.NormalW.x
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // r2.y <- vout.NormalW.y
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // r2.z <- vout.NormalW.z
                 
-                #line 64
+                #line 114
                 dp4 r3.x, r0.xyzw, cb0[8].xyzw  // r3.x <- vout.PosH.x
                 dp4 r3.y, r0.xyzw, cb0[9].xyzw  // r3.y <- vout.PosH.y
                 dp4 r3.z, r0.xyzw, cb0[10].xyzw  // r3.z <- vout.PosH.z
                 dp4 r3.w, r0.xyzw, cb0[11].xyzw  // r3.w <- vout.PosH.w
                 
-                #line 67
+                #line 117
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,1.000000,1.000000)
                 dp4 r4.x, r0.xyww, cb0[12].xyzw  // r4.x <- vout.Tex.x
                 dp4 r4.y, r0.xyzw, cb0[13].xyzw  // r4.y <- vout.Tex.y
                 
-                #line 69
+                #line 119
                 mov o0.xyzw, r3.xyzw
                 mov o1.xyz, r1.xyzx
                 mov o2.xyz, r2.xyzx
@@ -243,35 +259,35 @@ fxgroup
                 //   v3.x <- pin.Tex.x; v3.y <- pin.Tex.y; 
                 //   o0.x <- <PS return value>.x; o0.y <- <PS return value>.y; o0.z <- <PS return value>.z; o0.w <- <PS return value>.w
                 //
-                #line 75 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 125 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // r0.x <- pin.NormalW.x; r0.y <- pin.NormalW.y; r0.z <- pin.NormalW.z
                 
-                #line 78
+                #line 128
                 mov r1.xyz, -v1.xyzx
                 add r1.xyz, r1.xyzx, cb0[12].xyzx  // r1.x <- toEye.x; r1.y <- toEye.y; r1.z <- toEye.z
                 
-                #line 81
+                #line 132
                 dp3 r0.w, r1.xyzx, r1.xyzx
                 sqrt r0.w, r0.w  // r0.w <- distToEye
                 
-                #line 84
+                #line 136
                 div r1.xyz, r1.xyzx, r0.wwww
                 
-                #line 91
+                #line 143
                 mov r2.xyz, l(1.000000,1.000000,1.000000,0)  // r2.x <- texColor.x; r2.y <- texColor.y; r2.z <- texColor.z
                 
-                #line 100
+                #line 165
                 mov r3.xyz, l(0,0,0,0)  // r3.x <- ambient.x; r3.y <- ambient.y; r3.z <- ambient.z
                 
-                #line 101
+                #line 166
                 mov r4.xyz, l(0,0,0,0)  // r4.x <- diffuse.x; r4.y <- diffuse.y; r4.z <- diffuse.z
                 
-                #line 102
+                #line 167
                 mov r5.xyz, l(0,0,0,0)  // r5.x <- spec.x; r5.y <- spec.y; r5.z <- spec.z
                 
-                #line 109
+                #line 174
                 nop 
                 mov r6.xyz, cb1[16].xyzx
                 mov r7.xyz, cb1[17].xyzx
@@ -328,29 +344,29 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, r13.xyzx  // r0.x <- diffuse.x; r0.y <- diffuse.y; r0.z <- diffuse.z
                 movc r1.xyz, r1.wwww, r1.xyzx, r14.xyzx
                 
-                #line 109 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 174 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r6.xyz, r6.xyzx  // r6.x <- A.x; r6.y <- A.y; r6.z <- A.z
                 mov r0.xyz, r0.xyzx  // r0.x <- D.x; r0.y <- D.y; r0.z <- D.z
                 mov r1.xyz, r1.xyzx  // r1.x <- S.x; r1.y <- S.y; r1.z <- S.z
                 
-                #line 112
+                #line 177
                 add r3.xyz, r3.xyzx, r6.xyzx
                 
-                #line 113
+                #line 178
                 add r0.xyz, r0.xyzx, r4.xyzx  // r0.x <- diffuse.x; r0.y <- diffuse.y; r0.z <- diffuse.z
                 
-                #line 114
+                #line 179
                 add r1.xyz, r1.xyzx, r5.xyzx  // r1.x <- spec.x; r1.y <- spec.y; r1.z <- spec.z
                 
-                #line 118
+                #line 183
                 add r0.xyz, r0.xyzx, r3.xyzx
                 mul r0.xyz, r0.xyzx, r2.xyzx
                 add r0.xyz, r1.xyzx, r0.xyzx  // r0.x <- litColor.x; r0.y <- litColor.y; r0.z <- litColor.z
                 
-                #line 121
+                #line 186
                 mov r0.w, cb1[17].w  // r0.w <- litColor.w
                 
-                #line 125
+                #line 190
                 mov o0.xyz, r0.xyzx
                 mov o0.w, r0.w
                 ret 
@@ -440,31 +456,31 @@ fxgroup
                 //   o1.x <- <VS return value>.PosW.x; o1.y <- <VS return value>.PosW.y; o1.z <- <VS return value>.PosW.z; 
                 //   o0.x <- <VS return value>.PosH.x; o0.y <- <VS return value>.PosH.y; o0.z <- <VS return value>.PosH.z; o0.w <- <VS return value>.PosH.w
                 //
-                #line 60 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 111 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // r1.x <- vout.PosW.x
                 dp4 r1.y, r0.xyzw, cb0[1].xyzw  // r1.y <- vout.PosW.y
                 dp4 r1.z, r0.xyzw, cb0[2].xyzw  // r1.z <- vout.PosW.z
                 
-                #line 61
+                #line 112
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // r2.x <- vout.NormalW.x
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // r2.y <- vout.NormalW.y
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // r2.z <- vout.NormalW.z
                 
-                #line 64
+                #line 114
                 dp4 r3.x, r0.xyzw, cb0[8].xyzw  // r3.x <- vout.PosH.x
                 dp4 r3.y, r0.xyzw, cb0[9].xyzw  // r3.y <- vout.PosH.y
                 dp4 r3.z, r0.xyzw, cb0[10].xyzw  // r3.z <- vout.PosH.z
                 dp4 r3.w, r0.xyzw, cb0[11].xyzw  // r3.w <- vout.PosH.w
                 
-                #line 67
+                #line 117
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,1.000000,1.000000)
                 dp4 r4.x, r0.xyww, cb0[12].xyzw  // r4.x <- vout.Tex.x
                 dp4 r4.y, r0.xyzw, cb0[13].xyzw  // r4.y <- vout.Tex.y
                 
-                #line 69
+                #line 119
                 mov o0.xyzw, r3.xyzw
                 mov o1.xyz, r1.xyzx
                 mov o2.xyz, r2.xyzx
@@ -563,35 +579,35 @@ fxgroup
                 //   v3.x <- pin.Tex.x; v3.y <- pin.Tex.y; 
                 //   o0.x <- <PS return value>.x; o0.y <- <PS return value>.y; o0.z <- <PS return value>.z; o0.w <- <PS return value>.w
                 //
-                #line 75 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 125 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // r0.x <- pin.NormalW.x; r0.y <- pin.NormalW.y; r0.z <- pin.NormalW.z
                 
-                #line 78
+                #line 128
                 mov r1.xyz, -v1.xyzx
                 add r1.xyz, r1.xyzx, cb0[12].xyzx  // r1.x <- toEye.x; r1.y <- toEye.y; r1.z <- toEye.z
                 
-                #line 81
+                #line 132
                 dp3 r0.w, r1.xyzx, r1.xyzx
                 sqrt r0.w, r0.w  // r0.w <- distToEye
                 
-                #line 84
+                #line 136
                 div r1.xyz, r1.xyzx, r0.wwww
                 
-                #line 91
+                #line 143
                 mov r2.xyz, l(1.000000,1.000000,1.000000,0)  // r2.x <- texColor.x; r2.y <- texColor.y; r2.z <- texColor.z
                 
-                #line 100
+                #line 165
                 mov r3.xyz, l(0,0,0,0)  // r3.x <- ambient.x; r3.y <- ambient.y; r3.z <- ambient.z
                 
-                #line 101
+                #line 166
                 mov r4.xyz, l(0,0,0,0)  // r4.x <- diffuse.x; r4.y <- diffuse.y; r4.z <- diffuse.z
                 
-                #line 102
+                #line 167
                 mov r5.xyz, l(0,0,0,0)  // r5.x <- spec.x; r5.y <- spec.y; r5.z <- spec.z
                 
-                #line 109
+                #line 174
                 nop 
                 mov r6.xyz, cb1[16].xyzx
                 mov r7.xyz, cb1[17].xyzx
@@ -648,21 +664,21 @@ fxgroup
                 movc r7.xyz, r1.wwww, r7.xyzx, r13.xyzx
                 movc r8.xyz, r1.wwww, r8.xyzx, r14.xyzx
                 
-                #line 109 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 174 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r6.xyz, r6.xyzx  // r6.x <- A.x; r6.y <- A.y; r6.z <- A.z
                 mov r7.xyz, r7.xyzx  // r7.x <- D.x; r7.y <- D.y; r7.z <- D.z
                 mov r8.xyz, r8.xyzx  // r8.x <- S.x; r8.y <- S.y; r8.z <- S.z
                 
-                #line 112
+                #line 177
                 add r3.xyz, r3.xyzx, r6.xyzx
                 
-                #line 113
+                #line 178
                 add r4.xyz, r4.xyzx, r7.xyzx
                 
-                #line 114
+                #line 179
                 add r5.xyz, r5.xyzx, r8.xyzx
                 
-                #line 109
+                #line 174
                 nop 
                 mov r6.xyz, cb1[16].xyzx  // r6.x <- material.ambient.x; r6.y <- material.ambient.y; r6.z <- material.ambient.z
                 mov r7.xyz, cb1[17].xyzx  // r7.x <- material.diffuse.x; r7.y <- material.diffuse.y; r7.z <- material.diffuse.z
@@ -717,29 +733,29 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, r13.xyzx  // r0.x <- diffuse.x; r0.y <- diffuse.y; r0.z <- diffuse.z
                 movc r1.xyz, r1.wwww, r1.xyzx, r14.xyzx
                 
-                #line 109 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 174 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r6.xyz, r6.xyzx  // r6.x <- A.x; r6.y <- A.y; r6.z <- A.z
                 mov r0.xyz, r0.xyzx  // r0.x <- D.x; r0.y <- D.y; r0.z <- D.z
                 mov r1.xyz, r1.xyzx  // r1.x <- S.x; r1.y <- S.y; r1.z <- S.z
                 
-                #line 112
+                #line 177
                 add r3.xyz, r3.xyzx, r6.xyzx
                 
-                #line 113
+                #line 178
                 add r0.xyz, r0.xyzx, r4.xyzx  // r0.x <- diffuse.x; r0.y <- diffuse.y; r0.z <- diffuse.z
                 
-                #line 114
+                #line 179
                 add r1.xyz, r1.xyzx, r5.xyzx  // r1.x <- spec.x; r1.y <- spec.y; r1.z <- spec.z
                 
-                #line 118
+                #line 183
                 add r0.xyz, r0.xyzx, r3.xyzx
                 mul r0.xyz, r0.xyzx, r2.xyzx
                 add r0.xyz, r1.xyzx, r0.xyzx  // r0.x <- litColor.x; r0.y <- litColor.y; r0.z <- litColor.z
                 
-                #line 121
+                #line 186
                 mov r0.w, cb1[17].w  // r0.w <- litColor.w
                 
-                #line 125
+                #line 190
                 mov o0.xyz, r0.xyzx
                 mov o0.w, r0.w
                 ret 
@@ -829,31 +845,31 @@ fxgroup
                 //   o1.x <- <VS return value>.PosW.x; o1.y <- <VS return value>.PosW.y; o1.z <- <VS return value>.PosW.z; 
                 //   o0.x <- <VS return value>.PosH.x; o0.y <- <VS return value>.PosH.y; o0.z <- <VS return value>.PosH.z; o0.w <- <VS return value>.PosH.w
                 //
-                #line 60 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 111 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // r1.x <- vout.PosW.x
                 dp4 r1.y, r0.xyzw, cb0[1].xyzw  // r1.y <- vout.PosW.y
                 dp4 r1.z, r0.xyzw, cb0[2].xyzw  // r1.z <- vout.PosW.z
                 
-                #line 61
+                #line 112
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // r2.x <- vout.NormalW.x
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // r2.y <- vout.NormalW.y
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // r2.z <- vout.NormalW.z
                 
-                #line 64
+                #line 114
                 dp4 r3.x, r0.xyzw, cb0[8].xyzw  // r3.x <- vout.PosH.x
                 dp4 r3.y, r0.xyzw, cb0[9].xyzw  // r3.y <- vout.PosH.y
                 dp4 r3.z, r0.xyzw, cb0[10].xyzw  // r3.z <- vout.PosH.z
                 dp4 r3.w, r0.xyzw, cb0[11].xyzw  // r3.w <- vout.PosH.w
                 
-                #line 67
+                #line 117
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,1.000000,1.000000)
                 dp4 r4.x, r0.xyww, cb0[12].xyzw  // r4.x <- vout.Tex.x
                 dp4 r4.y, r0.xyzw, cb0[13].xyzw  // r4.y <- vout.Tex.y
                 
-                #line 69
+                #line 119
                 mov o0.xyzw, r3.xyzw
                 mov o1.xyz, r1.xyzx
                 mov o2.xyz, r2.xyzx
@@ -952,35 +968,35 @@ fxgroup
                 //   v3.x <- pin.Tex.x; v3.y <- pin.Tex.y; 
                 //   o0.x <- <PS return value>.x; o0.y <- <PS return value>.y; o0.z <- <PS return value>.z; o0.w <- <PS return value>.w
                 //
-                #line 75 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 125 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // r0.x <- pin.NormalW.x; r0.y <- pin.NormalW.y; r0.z <- pin.NormalW.z
                 
-                #line 78
+                #line 128
                 mov r1.xyz, -v1.xyzx
                 add r1.xyz, r1.xyzx, cb0[12].xyzx  // r1.x <- toEye.x; r1.y <- toEye.y; r1.z <- toEye.z
                 
-                #line 81
+                #line 132
                 dp3 r0.w, r1.xyzx, r1.xyzx
                 sqrt r0.w, r0.w  // r0.w <- distToEye
                 
-                #line 84
+                #line 136
                 div r1.xyz, r1.xyzx, r0.wwww
                 
-                #line 91
+                #line 143
                 mov r2.xyz, l(1.000000,1.000000,1.000000,0)  // r2.x <- texColor.x; r2.y <- texColor.y; r2.z <- texColor.z
                 
-                #line 100
+                #line 165
                 mov r3.xyz, l(0,0,0,0)  // r3.x <- ambient.x; r3.y <- ambient.y; r3.z <- ambient.z
                 
-                #line 101
+                #line 166
                 mov r4.xyz, l(0,0,0,0)  // r4.x <- diffuse.x; r4.y <- diffuse.y; r4.z <- diffuse.z
                 
-                #line 102
+                #line 167
                 mov r5.xyz, l(0,0,0,0)  // r5.x <- spec.x; r5.y <- spec.y; r5.z <- spec.z
                 
-                #line 109
+                #line 174
                 nop 
                 mov r6.xyz, cb1[16].xyzx
                 mov r7.xyz, cb1[17].xyzx
@@ -1037,21 +1053,21 @@ fxgroup
                 movc r7.xyz, r1.wwww, r7.xyzx, r13.xyzx
                 movc r8.xyz, r1.wwww, r8.xyzx, r14.xyzx
                 
-                #line 109 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 174 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r6.xyz, r6.xyzx  // r6.x <- A.x; r6.y <- A.y; r6.z <- A.z
                 mov r7.xyz, r7.xyzx  // r7.x <- D.x; r7.y <- D.y; r7.z <- D.z
                 mov r8.xyz, r8.xyzx  // r8.x <- S.x; r8.y <- S.y; r8.z <- S.z
                 
-                #line 112
+                #line 177
                 add r3.xyz, r3.xyzx, r6.xyzx
                 
-                #line 113
+                #line 178
                 add r4.xyz, r4.xyzx, r7.xyzx
                 
-                #line 114
+                #line 179
                 add r5.xyz, r5.xyzx, r8.xyzx
                 
-                #line 109
+                #line 174
                 nop 
                 mov r6.xyz, cb1[16].xyzx  // r6.x <- material.ambient.x; r6.y <- material.ambient.y; r6.z <- material.ambient.z
                 mov r7.xyz, cb1[17].xyzx  // r7.x <- material.diffuse.x; r7.y <- material.diffuse.y; r7.z <- material.diffuse.z
@@ -1106,21 +1122,21 @@ fxgroup
                 movc r7.xyz, r1.wwww, r7.xyzx, r13.xyzx
                 movc r8.xyz, r1.wwww, r8.xyzx, r14.xyzx
                 
-                #line 109 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 174 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r6.xyz, r6.xyzx  // r6.x <- A.x; r6.y <- A.y; r6.z <- A.z
                 mov r7.xyz, r7.xyzx  // r7.x <- D.x; r7.y <- D.y; r7.z <- D.z
                 mov r8.xyz, r8.xyzx  // r8.x <- S.x; r8.y <- S.y; r8.z <- S.z
                 
-                #line 112
+                #line 177
                 add r3.xyz, r3.xyzx, r6.xyzx
                 
-                #line 113
+                #line 178
                 add r4.xyz, r4.xyzx, r7.xyzx
                 
-                #line 114
+                #line 179
                 add r5.xyz, r5.xyzx, r8.xyzx
                 
-                #line 109
+                #line 174
                 nop 
                 mov r6.xyz, cb1[16].xyzx  // r6.x <- material.ambient.x; r6.y <- material.ambient.y; r6.z <- material.ambient.z
                 mov r7.xyz, cb1[17].xyzx  // r7.x <- material.diffuse.x; r7.y <- material.diffuse.y; r7.z <- material.diffuse.z
@@ -1175,29 +1191,29 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, r13.xyzx  // r0.x <- diffuse.x; r0.y <- diffuse.y; r0.z <- diffuse.z
                 movc r1.xyz, r1.wwww, r1.xyzx, r14.xyzx
                 
-                #line 109 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 174 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r6.xyz, r6.xyzx  // r6.x <- A.x; r6.y <- A.y; r6.z <- A.z
                 mov r0.xyz, r0.xyzx  // r0.x <- D.x; r0.y <- D.y; r0.z <- D.z
                 mov r1.xyz, r1.xyzx  // r1.x <- S.x; r1.y <- S.y; r1.z <- S.z
                 
-                #line 112
+                #line 177
                 add r3.xyz, r3.xyzx, r6.xyzx
                 
-                #line 113
+                #line 178
                 add r0.xyz, r0.xyzx, r4.xyzx  // r0.x <- diffuse.x; r0.y <- diffuse.y; r0.z <- diffuse.z
                 
-                #line 114
+                #line 179
                 add r1.xyz, r1.xyzx, r5.xyzx  // r1.x <- spec.x; r1.y <- spec.y; r1.z <- spec.z
                 
-                #line 118
+                #line 183
                 add r0.xyz, r0.xyzx, r3.xyzx
                 mul r0.xyz, r0.xyzx, r2.xyzx
                 add r0.xyz, r1.xyzx, r0.xyzx  // r0.x <- litColor.x; r0.y <- litColor.y; r0.z <- litColor.z
                 
-                #line 121
+                #line 186
                 mov r0.w, cb1[17].w  // r0.w <- litColor.w
                 
-                #line 125
+                #line 190
                 mov o0.xyz, r0.xyzx
                 mov o0.w, r0.w
                 ret 
@@ -1287,31 +1303,31 @@ fxgroup
                 //   o1.x <- <VS return value>.PosW.x; o1.y <- <VS return value>.PosW.y; o1.z <- <VS return value>.PosW.z; 
                 //   o0.x <- <VS return value>.PosH.x; o0.y <- <VS return value>.PosH.y; o0.z <- <VS return value>.PosH.z; o0.w <- <VS return value>.PosH.w
                 //
-                #line 60 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 111 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // r1.x <- vout.PosW.x
                 dp4 r1.y, r0.xyzw, cb0[1].xyzw  // r1.y <- vout.PosW.y
                 dp4 r1.z, r0.xyzw, cb0[2].xyzw  // r1.z <- vout.PosW.z
                 
-                #line 61
+                #line 112
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // r2.x <- vout.NormalW.x
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // r2.y <- vout.NormalW.y
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // r2.z <- vout.NormalW.z
                 
-                #line 64
+                #line 114
                 dp4 r3.x, r0.xyzw, cb0[8].xyzw  // r3.x <- vout.PosH.x
                 dp4 r3.y, r0.xyzw, cb0[9].xyzw  // r3.y <- vout.PosH.y
                 dp4 r3.z, r0.xyzw, cb0[10].xyzw  // r3.z <- vout.PosH.z
                 dp4 r3.w, r0.xyzw, cb0[11].xyzw  // r3.w <- vout.PosH.w
                 
-                #line 67
+                #line 117
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,1.000000,1.000000)
                 dp4 r4.x, r0.xyww, cb0[12].xyzw  // r4.x <- vout.Tex.x
                 dp4 r4.y, r0.xyzw, cb0[13].xyzw  // r4.y <- vout.Tex.y
                 
-                #line 69
+                #line 119
                 mov o0.xyzw, r3.xyzw
                 mov o1.xyz, r1.xyzx
                 mov o2.xyz, r2.xyzx
@@ -1354,7 +1370,7 @@ fxgroup
                 // Name                                 Type  Format         Dim      HLSL Bind  Count
                 // ------------------------------ ---------- ------- ----------- -------------- ------
                 // samAnisotropic                    sampler      NA          NA             s0      1 
-                // gDiffuseMap                       texture  float4          2d             t0      1 
+                // gFire                             texture  float4          2d             t0      1 
                 // cbPerObject                       cbuffer      NA          NA            cb0      1 
                 //
                 //
@@ -1391,28 +1407,28 @@ fxgroup
                 //   v3.x <- pin.Tex.x; v3.y <- pin.Tex.y; 
                 //   o0.x <- <PS return value>.x; o0.y <- <PS return value>.y; o0.z <- <PS return value>.z; o0.w <- <PS return value>.w
                 //
-                #line 93 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 160 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyz, v3.xyxx, t0.xyzw, s0
                 mov r0.xyz, r0.xyzx  // r0.x <- texColor.x; r0.y <- texColor.y; r0.z <- texColor.z
                 
-                #line 100
+                #line 165
                 mov r1.xyz, l(0,0,0,0)  // r1.x <- ambient.x; r1.y <- ambient.y; r1.z <- ambient.z
                 
-                #line 101
+                #line 166
                 mov r2.xyz, l(0,0,0,0)  // r2.x <- diffuse.x; r2.y <- diffuse.y; r2.z <- diffuse.z
                 
-                #line 102
+                #line 167
                 mov r3.xyz, l(0,0,0,0)  // r3.x <- spec.x; r3.y <- spec.y; r3.z <- spec.z
                 
-                #line 118
+                #line 183
                 add r1.xyz, r1.xyzx, r2.xyzx
                 mul r0.xyz, r0.xyzx, r1.xyzx
                 add r0.xyz, r3.xyzx, r0.xyzx  // r0.x <- litColor.x; r0.y <- litColor.y; r0.z <- litColor.z
                 
-                #line 121
+                #line 186
                 mov r0.w, cb0[17].w  // r0.w <- litColor.w
                 
-                #line 125
+                #line 190
                 mov o0.xyz, r0.xyzx
                 mov o0.w, r0.w
                 ret 
@@ -1502,31 +1518,31 @@ fxgroup
                 //   o1.x <- <VS return value>.PosW.x; o1.y <- <VS return value>.PosW.y; o1.z <- <VS return value>.PosW.z; 
                 //   o0.x <- <VS return value>.PosH.x; o0.y <- <VS return value>.PosH.y; o0.z <- <VS return value>.PosH.z; o0.w <- <VS return value>.PosH.w
                 //
-                #line 60 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 111 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // r1.x <- vout.PosW.x
                 dp4 r1.y, r0.xyzw, cb0[1].xyzw  // r1.y <- vout.PosW.y
                 dp4 r1.z, r0.xyzw, cb0[2].xyzw  // r1.z <- vout.PosW.z
                 
-                #line 61
+                #line 112
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // r2.x <- vout.NormalW.x
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // r2.y <- vout.NormalW.y
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // r2.z <- vout.NormalW.z
                 
-                #line 64
+                #line 114
                 dp4 r3.x, r0.xyzw, cb0[8].xyzw  // r3.x <- vout.PosH.x
                 dp4 r3.y, r0.xyzw, cb0[9].xyzw  // r3.y <- vout.PosH.y
                 dp4 r3.z, r0.xyzw, cb0[10].xyzw  // r3.z <- vout.PosH.z
                 dp4 r3.w, r0.xyzw, cb0[11].xyzw  // r3.w <- vout.PosH.w
                 
-                #line 67
+                #line 117
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,1.000000,1.000000)
                 dp4 r4.x, r0.xyww, cb0[12].xyzw  // r4.x <- vout.Tex.x
                 dp4 r4.y, r0.xyzw, cb0[13].xyzw  // r4.y <- vout.Tex.y
                 
-                #line 69
+                #line 119
                 mov o0.xyzw, r3.xyzw
                 mov o1.xyz, r1.xyzx
                 mov o2.xyz, r2.xyzx
@@ -1589,7 +1605,7 @@ fxgroup
                 // Name                                 Type  Format         Dim      HLSL Bind  Count
                 // ------------------------------ ---------- ------- ----------- -------------- ------
                 // samAnisotropic                    sampler      NA          NA             s0      1 
-                // gDiffuseMap                       texture  float4          2d             t0      1 
+                // gFire                             texture  float4          2d             t0      1 
                 // cbPerFrame                        cbuffer      NA          NA            cb0      1 
                 // cbPerObject                       cbuffer      NA          NA            cb1      1 
                 //
@@ -1630,36 +1646,36 @@ fxgroup
                 //   v3.x <- pin.Tex.x; v3.y <- pin.Tex.y; 
                 //   o0.x <- <PS return value>.x; o0.y <- <PS return value>.y; o0.z <- <PS return value>.z; o0.w <- <PS return value>.w
                 //
-                #line 75 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 125 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // r0.x <- pin.NormalW.x; r0.y <- pin.NormalW.y; r0.z <- pin.NormalW.z
                 
-                #line 78
+                #line 128
                 mov r1.xyz, -v1.xyzx
                 add r1.xyz, r1.xyzx, cb0[12].xyzx  // r1.x <- toEye.x; r1.y <- toEye.y; r1.z <- toEye.z
                 
-                #line 81
+                #line 132
                 dp3 r0.w, r1.xyzx, r1.xyzx
                 sqrt r0.w, r0.w  // r0.w <- distToEye
                 
-                #line 84
+                #line 136
                 div r1.xyz, r1.xyzx, r0.wwww
                 
-                #line 93
+                #line 160
                 sample_indexable(texture2d)(float,float,float,float) r2.xyz, v3.xyxx, t0.xyzw, s0
                 mov r2.xyz, r2.xyzx  // r2.x <- texColor.x; r2.y <- texColor.y; r2.z <- texColor.z
                 
-                #line 100
+                #line 165
                 mov r3.xyz, l(0,0,0,0)  // r3.x <- ambient.x; r3.y <- ambient.y; r3.z <- ambient.z
                 
-                #line 101
+                #line 166
                 mov r4.xyz, l(0,0,0,0)  // r4.x <- diffuse.x; r4.y <- diffuse.y; r4.z <- diffuse.z
                 
-                #line 102
+                #line 167
                 mov r5.xyz, l(0,0,0,0)  // r5.x <- spec.x; r5.y <- spec.y; r5.z <- spec.z
                 
-                #line 109
+                #line 174
                 nop 
                 mov r6.xyz, cb1[16].xyzx
                 mov r7.xyz, cb1[17].xyzx
@@ -1716,29 +1732,29 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, r13.xyzx  // r0.x <- diffuse.x; r0.y <- diffuse.y; r0.z <- diffuse.z
                 movc r1.xyz, r1.wwww, r1.xyzx, r14.xyzx
                 
-                #line 109 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 174 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r6.xyz, r6.xyzx  // r6.x <- A.x; r6.y <- A.y; r6.z <- A.z
                 mov r0.xyz, r0.xyzx  // r0.x <- D.x; r0.y <- D.y; r0.z <- D.z
                 mov r1.xyz, r1.xyzx  // r1.x <- S.x; r1.y <- S.y; r1.z <- S.z
                 
-                #line 112
+                #line 177
                 add r3.xyz, r3.xyzx, r6.xyzx
                 
-                #line 113
+                #line 178
                 add r0.xyz, r0.xyzx, r4.xyzx  // r0.x <- diffuse.x; r0.y <- diffuse.y; r0.z <- diffuse.z
                 
-                #line 114
+                #line 179
                 add r1.xyz, r1.xyzx, r5.xyzx  // r1.x <- spec.x; r1.y <- spec.y; r1.z <- spec.z
                 
-                #line 118
+                #line 183
                 add r0.xyz, r0.xyzx, r3.xyzx
                 mul r0.xyz, r0.xyzx, r2.xyzx
                 add r0.xyz, r1.xyzx, r0.xyzx  // r0.x <- litColor.x; r0.y <- litColor.y; r0.z <- litColor.z
                 
-                #line 121
+                #line 186
                 mov r0.w, cb1[17].w  // r0.w <- litColor.w
                 
-                #line 125
+                #line 190
                 mov o0.xyz, r0.xyzx
                 mov o0.w, r0.w
                 ret 
@@ -1828,31 +1844,31 @@ fxgroup
                 //   o1.x <- <VS return value>.PosW.x; o1.y <- <VS return value>.PosW.y; o1.z <- <VS return value>.PosW.z; 
                 //   o0.x <- <VS return value>.PosH.x; o0.y <- <VS return value>.PosH.y; o0.z <- <VS return value>.PosH.z; o0.w <- <VS return value>.PosH.w
                 //
-                #line 60 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 111 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // r1.x <- vout.PosW.x
                 dp4 r1.y, r0.xyzw, cb0[1].xyzw  // r1.y <- vout.PosW.y
                 dp4 r1.z, r0.xyzw, cb0[2].xyzw  // r1.z <- vout.PosW.z
                 
-                #line 61
+                #line 112
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // r2.x <- vout.NormalW.x
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // r2.y <- vout.NormalW.y
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // r2.z <- vout.NormalW.z
                 
-                #line 64
+                #line 114
                 dp4 r3.x, r0.xyzw, cb0[8].xyzw  // r3.x <- vout.PosH.x
                 dp4 r3.y, r0.xyzw, cb0[9].xyzw  // r3.y <- vout.PosH.y
                 dp4 r3.z, r0.xyzw, cb0[10].xyzw  // r3.z <- vout.PosH.z
                 dp4 r3.w, r0.xyzw, cb0[11].xyzw  // r3.w <- vout.PosH.w
                 
-                #line 67
+                #line 117
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,1.000000,1.000000)
                 dp4 r4.x, r0.xyww, cb0[12].xyzw  // r4.x <- vout.Tex.x
                 dp4 r4.y, r0.xyzw, cb0[13].xyzw  // r4.y <- vout.Tex.y
                 
-                #line 69
+                #line 119
                 mov o0.xyzw, r3.xyzw
                 mov o1.xyz, r1.xyzx
                 mov o2.xyz, r2.xyzx
@@ -1915,7 +1931,7 @@ fxgroup
                 // Name                                 Type  Format         Dim      HLSL Bind  Count
                 // ------------------------------ ---------- ------- ----------- -------------- ------
                 // samAnisotropic                    sampler      NA          NA             s0      1 
-                // gDiffuseMap                       texture  float4          2d             t0      1 
+                // gFire                             texture  float4          2d             t0      1 
                 // cbPerFrame                        cbuffer      NA          NA            cb0      1 
                 // cbPerObject                       cbuffer      NA          NA            cb1      1 
                 //
@@ -1956,36 +1972,36 @@ fxgroup
                 //   v3.x <- pin.Tex.x; v3.y <- pin.Tex.y; 
                 //   o0.x <- <PS return value>.x; o0.y <- <PS return value>.y; o0.z <- <PS return value>.z; o0.w <- <PS return value>.w
                 //
-                #line 75 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 125 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // r0.x <- pin.NormalW.x; r0.y <- pin.NormalW.y; r0.z <- pin.NormalW.z
                 
-                #line 78
+                #line 128
                 mov r1.xyz, -v1.xyzx
                 add r1.xyz, r1.xyzx, cb0[12].xyzx  // r1.x <- toEye.x; r1.y <- toEye.y; r1.z <- toEye.z
                 
-                #line 81
+                #line 132
                 dp3 r0.w, r1.xyzx, r1.xyzx
                 sqrt r0.w, r0.w  // r0.w <- distToEye
                 
-                #line 84
+                #line 136
                 div r1.xyz, r1.xyzx, r0.wwww
                 
-                #line 93
+                #line 160
                 sample_indexable(texture2d)(float,float,float,float) r2.xyz, v3.xyxx, t0.xyzw, s0
                 mov r2.xyz, r2.xyzx  // r2.x <- texColor.x; r2.y <- texColor.y; r2.z <- texColor.z
                 
-                #line 100
+                #line 165
                 mov r3.xyz, l(0,0,0,0)  // r3.x <- ambient.x; r3.y <- ambient.y; r3.z <- ambient.z
                 
-                #line 101
+                #line 166
                 mov r4.xyz, l(0,0,0,0)  // r4.x <- diffuse.x; r4.y <- diffuse.y; r4.z <- diffuse.z
                 
-                #line 102
+                #line 167
                 mov r5.xyz, l(0,0,0,0)  // r5.x <- spec.x; r5.y <- spec.y; r5.z <- spec.z
                 
-                #line 109
+                #line 174
                 nop 
                 mov r6.xyz, cb1[16].xyzx
                 mov r7.xyz, cb1[17].xyzx
@@ -2042,21 +2058,21 @@ fxgroup
                 movc r7.xyz, r1.wwww, r7.xyzx, r13.xyzx
                 movc r8.xyz, r1.wwww, r8.xyzx, r14.xyzx
                 
-                #line 109 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 174 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r6.xyz, r6.xyzx  // r6.x <- A.x; r6.y <- A.y; r6.z <- A.z
                 mov r7.xyz, r7.xyzx  // r7.x <- D.x; r7.y <- D.y; r7.z <- D.z
                 mov r8.xyz, r8.xyzx  // r8.x <- S.x; r8.y <- S.y; r8.z <- S.z
                 
-                #line 112
+                #line 177
                 add r3.xyz, r3.xyzx, r6.xyzx
                 
-                #line 113
+                #line 178
                 add r4.xyz, r4.xyzx, r7.xyzx
                 
-                #line 114
+                #line 179
                 add r5.xyz, r5.xyzx, r8.xyzx
                 
-                #line 109
+                #line 174
                 nop 
                 mov r6.xyz, cb1[16].xyzx  // r6.x <- material.ambient.x; r6.y <- material.ambient.y; r6.z <- material.ambient.z
                 mov r7.xyz, cb1[17].xyzx  // r7.x <- material.diffuse.x; r7.y <- material.diffuse.y; r7.z <- material.diffuse.z
@@ -2111,29 +2127,29 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, r13.xyzx  // r0.x <- diffuse.x; r0.y <- diffuse.y; r0.z <- diffuse.z
                 movc r1.xyz, r1.wwww, r1.xyzx, r14.xyzx
                 
-                #line 109 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 174 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r6.xyz, r6.xyzx  // r6.x <- A.x; r6.y <- A.y; r6.z <- A.z
                 mov r0.xyz, r0.xyzx  // r0.x <- D.x; r0.y <- D.y; r0.z <- D.z
                 mov r1.xyz, r1.xyzx  // r1.x <- S.x; r1.y <- S.y; r1.z <- S.z
                 
-                #line 112
+                #line 177
                 add r3.xyz, r3.xyzx, r6.xyzx
                 
-                #line 113
+                #line 178
                 add r0.xyz, r0.xyzx, r4.xyzx  // r0.x <- diffuse.x; r0.y <- diffuse.y; r0.z <- diffuse.z
                 
-                #line 114
+                #line 179
                 add r1.xyz, r1.xyzx, r5.xyzx  // r1.x <- spec.x; r1.y <- spec.y; r1.z <- spec.z
                 
-                #line 118
+                #line 183
                 add r0.xyz, r0.xyzx, r3.xyzx
                 mul r0.xyz, r0.xyzx, r2.xyzx
                 add r0.xyz, r1.xyzx, r0.xyzx  // r0.x <- litColor.x; r0.y <- litColor.y; r0.z <- litColor.z
                 
-                #line 121
+                #line 186
                 mov r0.w, cb1[17].w  // r0.w <- litColor.w
                 
-                #line 125
+                #line 190
                 mov o0.xyz, r0.xyzx
                 mov o0.w, r0.w
                 ret 
@@ -2223,31 +2239,31 @@ fxgroup
                 //   o1.x <- <VS return value>.PosW.x; o1.y <- <VS return value>.PosW.y; o1.z <- <VS return value>.PosW.z; 
                 //   o0.x <- <VS return value>.PosH.x; o0.y <- <VS return value>.PosH.y; o0.z <- <VS return value>.PosH.z; o0.w <- <VS return value>.PosH.w
                 //
-                #line 60 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 111 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // r1.x <- vout.PosW.x
                 dp4 r1.y, r0.xyzw, cb0[1].xyzw  // r1.y <- vout.PosW.y
                 dp4 r1.z, r0.xyzw, cb0[2].xyzw  // r1.z <- vout.PosW.z
                 
-                #line 61
+                #line 112
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // r2.x <- vout.NormalW.x
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // r2.y <- vout.NormalW.y
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // r2.z <- vout.NormalW.z
                 
-                #line 64
+                #line 114
                 dp4 r3.x, r0.xyzw, cb0[8].xyzw  // r3.x <- vout.PosH.x
                 dp4 r3.y, r0.xyzw, cb0[9].xyzw  // r3.y <- vout.PosH.y
                 dp4 r3.z, r0.xyzw, cb0[10].xyzw  // r3.z <- vout.PosH.z
                 dp4 r3.w, r0.xyzw, cb0[11].xyzw  // r3.w <- vout.PosH.w
                 
-                #line 67
+                #line 117
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,1.000000,1.000000)
                 dp4 r4.x, r0.xyww, cb0[12].xyzw  // r4.x <- vout.Tex.x
                 dp4 r4.y, r0.xyzw, cb0[13].xyzw  // r4.y <- vout.Tex.y
                 
-                #line 69
+                #line 119
                 mov o0.xyzw, r3.xyzw
                 mov o1.xyz, r1.xyzx
                 mov o2.xyz, r2.xyzx
@@ -2310,7 +2326,7 @@ fxgroup
                 // Name                                 Type  Format         Dim      HLSL Bind  Count
                 // ------------------------------ ---------- ------- ----------- -------------- ------
                 // samAnisotropic                    sampler      NA          NA             s0      1 
-                // gDiffuseMap                       texture  float4          2d             t0      1 
+                // gFire                             texture  float4          2d             t0      1 
                 // cbPerFrame                        cbuffer      NA          NA            cb0      1 
                 // cbPerObject                       cbuffer      NA          NA            cb1      1 
                 //
@@ -2351,36 +2367,36 @@ fxgroup
                 //   v3.x <- pin.Tex.x; v3.y <- pin.Tex.y; 
                 //   o0.x <- <PS return value>.x; o0.y <- <PS return value>.y; o0.z <- <PS return value>.z; o0.w <- <PS return value>.w
                 //
-                #line 75 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 125 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // r0.x <- pin.NormalW.x; r0.y <- pin.NormalW.y; r0.z <- pin.NormalW.z
                 
-                #line 78
+                #line 128
                 mov r1.xyz, -v1.xyzx
                 add r1.xyz, r1.xyzx, cb0[12].xyzx  // r1.x <- toEye.x; r1.y <- toEye.y; r1.z <- toEye.z
                 
-                #line 81
+                #line 132
                 dp3 r0.w, r1.xyzx, r1.xyzx
                 sqrt r0.w, r0.w  // r0.w <- distToEye
                 
-                #line 84
+                #line 136
                 div r1.xyz, r1.xyzx, r0.wwww
                 
-                #line 93
+                #line 160
                 sample_indexable(texture2d)(float,float,float,float) r2.xyz, v3.xyxx, t0.xyzw, s0
                 mov r2.xyz, r2.xyzx  // r2.x <- texColor.x; r2.y <- texColor.y; r2.z <- texColor.z
                 
-                #line 100
+                #line 165
                 mov r3.xyz, l(0,0,0,0)  // r3.x <- ambient.x; r3.y <- ambient.y; r3.z <- ambient.z
                 
-                #line 101
+                #line 166
                 mov r4.xyz, l(0,0,0,0)  // r4.x <- diffuse.x; r4.y <- diffuse.y; r4.z <- diffuse.z
                 
-                #line 102
+                #line 167
                 mov r5.xyz, l(0,0,0,0)  // r5.x <- spec.x; r5.y <- spec.y; r5.z <- spec.z
                 
-                #line 109
+                #line 174
                 nop 
                 mov r6.xyz, cb1[16].xyzx
                 mov r7.xyz, cb1[17].xyzx
@@ -2437,21 +2453,21 @@ fxgroup
                 movc r7.xyz, r1.wwww, r7.xyzx, r13.xyzx
                 movc r8.xyz, r1.wwww, r8.xyzx, r14.xyzx
                 
-                #line 109 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 174 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r6.xyz, r6.xyzx  // r6.x <- A.x; r6.y <- A.y; r6.z <- A.z
                 mov r7.xyz, r7.xyzx  // r7.x <- D.x; r7.y <- D.y; r7.z <- D.z
                 mov r8.xyz, r8.xyzx  // r8.x <- S.x; r8.y <- S.y; r8.z <- S.z
                 
-                #line 112
+                #line 177
                 add r3.xyz, r3.xyzx, r6.xyzx
                 
-                #line 113
+                #line 178
                 add r4.xyz, r4.xyzx, r7.xyzx
                 
-                #line 114
+                #line 179
                 add r5.xyz, r5.xyzx, r8.xyzx
                 
-                #line 109
+                #line 174
                 nop 
                 mov r6.xyz, cb1[16].xyzx  // r6.x <- material.ambient.x; r6.y <- material.ambient.y; r6.z <- material.ambient.z
                 mov r7.xyz, cb1[17].xyzx  // r7.x <- material.diffuse.x; r7.y <- material.diffuse.y; r7.z <- material.diffuse.z
@@ -2506,21 +2522,21 @@ fxgroup
                 movc r7.xyz, r1.wwww, r7.xyzx, r13.xyzx
                 movc r8.xyz, r1.wwww, r8.xyzx, r14.xyzx
                 
-                #line 109 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 174 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r6.xyz, r6.xyzx  // r6.x <- A.x; r6.y <- A.y; r6.z <- A.z
                 mov r7.xyz, r7.xyzx  // r7.x <- D.x; r7.y <- D.y; r7.z <- D.z
                 mov r8.xyz, r8.xyzx  // r8.x <- S.x; r8.y <- S.y; r8.z <- S.z
                 
-                #line 112
+                #line 177
                 add r3.xyz, r3.xyzx, r6.xyzx
                 
-                #line 113
+                #line 178
                 add r4.xyz, r4.xyzx, r7.xyzx
                 
-                #line 114
+                #line 179
                 add r5.xyz, r5.xyzx, r8.xyzx
                 
-                #line 109
+                #line 174
                 nop 
                 mov r6.xyz, cb1[16].xyzx  // r6.x <- material.ambient.x; r6.y <- material.ambient.y; r6.z <- material.ambient.z
                 mov r7.xyz, cb1[17].xyzx  // r7.x <- material.diffuse.x; r7.y <- material.diffuse.y; r7.z <- material.diffuse.z
@@ -2575,29 +2591,29 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, r13.xyzx  // r0.x <- diffuse.x; r0.y <- diffuse.y; r0.z <- diffuse.z
                 movc r1.xyz, r1.wwww, r1.xyzx, r14.xyzx
                 
-                #line 109 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
+                #line 174 "E:\Computer Graphics\DX11\Exercises\DX11\Chapter 8 Texturing-Crate\FX\basic.fx"
                 mov r6.xyz, r6.xyzx  // r6.x <- A.x; r6.y <- A.y; r6.z <- A.z
                 mov r0.xyz, r0.xyzx  // r0.x <- D.x; r0.y <- D.y; r0.z <- D.z
                 mov r1.xyz, r1.xyzx  // r1.x <- S.x; r1.y <- S.y; r1.z <- S.z
                 
-                #line 112
+                #line 177
                 add r3.xyz, r3.xyzx, r6.xyzx
                 
-                #line 113
+                #line 178
                 add r0.xyz, r0.xyzx, r4.xyzx  // r0.x <- diffuse.x; r0.y <- diffuse.y; r0.z <- diffuse.z
                 
-                #line 114
+                #line 179
                 add r1.xyz, r1.xyzx, r5.xyzx  // r1.x <- spec.x; r1.y <- spec.y; r1.z <- spec.z
                 
-                #line 118
+                #line 183
                 add r0.xyz, r0.xyzx, r3.xyzx
                 mul r0.xyz, r0.xyzx, r2.xyzx
                 add r0.xyz, r1.xyzx, r0.xyzx  // r0.x <- litColor.x; r0.y <- litColor.y; r0.z <- litColor.z
                 
-                #line 121
+                #line 186
                 mov r0.w, cb1[17].w  // r0.w <- litColor.w
                 
-                #line 125
+                #line 190
                 mov o0.xyz, r0.xyzx
                 mov o0.w, r0.w
                 ret 

@@ -4,6 +4,18 @@
 // Basic effect that currently supports transformations, lighting, and texturing.
 //=============================================================================
 
+/************************************************************/
+// Exercise 1: Try different address modes and filters.
+/************************************************************/
+// Exercise 2: Assign mipmapped textures.
+/************************************************************/
+// Exercise 3: Use multitexturing to display flareball effects.
+/************************************************************/
+// Exercise 4: Rotate the texture with time varying.
+/************************************************************/
+// Exercise 5: Fire animation via page flipping.
+/************************************************************/
+
 #include "lighthelper.fx"
  
 cbuffer cbPerFrame
@@ -28,6 +40,16 @@ cbuffer cbPerObject
 // Nonnumeric values cannot be added to a cbuffer.
 Texture2D gDiffuseMap;
 
+// For exercise 3.
+Texture2D gFlare;
+Texture2D gFlareAlpha;
+// For exercise 2.
+Texture2D gMipMap;
+// For exercise 5.
+Texture2D gFire;
+
+
+
 SamplerState samAnisotropic
 {
 	Filter = ANISOTROPIC;
@@ -35,7 +57,36 @@ SamplerState samAnisotropic
 
 	AddressU = WRAP;
 	AddressV = WRAP;
+
+
+    // Address mode options.
+    AddressU = BORDER;
+    AddressV = BORDER;
+/*
+    AddressU = CLAMP;
+    AddressV = CLAMP;
+
+    AddressU = MIRROR;
+    AddressV = MIRROR;*/
 };
+
+SamplerState samPoint
+{
+    Filter = MIN_MAG_MIP_POINT;
+    
+    AddressU = WRAP;
+    AddressV = WRAP;
+};
+
+SamplerState samLinear
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    
+    AddressU = WRAP;
+    AddressV = WRAP;
+};
+
+
 
 struct VertexIn
 {
@@ -59,7 +110,6 @@ VertexOut VS(VertexIn vin)
 	// Transform to world space space.
 	vout.PosW    = mul(float4(vin.PosL, 1.0f), gWorld).xyz;
 	vout.NormalW = mul(vin.NormalL, (float3x3)gWorldInvTranspose);
-		
 	// Transform to homogeneous clip space.
 	vout.PosH = mul(float4(vin.PosL, 1.0f), gWorldViewProj);
 
@@ -77,8 +127,10 @@ float4 PS(VertexOut pin, uniform int gLightCount, uniform bool gUseTexture) : SV
 	// The toEye vector is used in lighting.
 	float3 toEye = gEyePosW - pin.PosW;
 
+
 	// Cache the distance to the eye from this surface point.
 	float distToEye = length(toEye); 
+    
 
 	// Normalize.
 	toEye /= distToEye;
@@ -89,13 +141,26 @@ float4 PS(VertexOut pin, uniform int gLightCount, uniform bool gUseTexture) : SV
 
 
     float4 texColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
-    if(gUseTexture)
-        texColor = gDiffuseMap.Sample(samAnisotropic, pin.Tex);
+    if (gUseTexture)
+    {
+    
+        // texColor = gDiffuseMap.Sample(samAnisotropic, pin.Tex);
+        // For exercise 1.
+        // texColor = gDiffuseMap.Sample(samLinear, pin.Tex);
+        // texColor = gDiffuseMap.Sample(samPoint, pin.Tex); 
 
- 
 
+        // For exercise 2.
+        // texColor = gMipMap.Sample(samAnisotropic, pin.Tex);
 
-	
+        // For exercise 3 and 4.
+        // texColor = gFlare.Sample(samAnisotropic, pin.Tex) * gFlareAlpha.Sample(samAnisotropic, pin.Tex);
+
+        // For exercise 5.
+        texColor = gFire.Sample(samAnisotropic, pin.Tex);
+
+        
+    }
 
 	float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);

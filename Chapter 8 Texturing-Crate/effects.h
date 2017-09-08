@@ -46,6 +46,13 @@ public:
 	inline void SetDirLights(const DirectionalLight* lights) { dirLights->SetRawValue(lights, 0, 3 * sizeof(DirectionalLight)); }
 	inline void SetMaterial(const Material& mat) { material->SetRawValue(&mat, 0, sizeof(Material)); }
 	inline void SetDiffuseMap(ID3D11ShaderResourceView* tex) { diffuseMap->SetResource(tex); };
+	// For exercise 3.
+	inline void SetFlareMap(ID3D11ShaderResourceView* tex) { flare->SetResource(tex); };
+	inline void SetFlareAlphaMap(ID3D11ShaderResourceView* tex) { flareAlpha->SetResource(tex); };
+	// For exercise 2.
+	inline void SetMipMap(ID3D11ShaderResourceView *tex) { mipMap->SetResource(tex); }
+	// For exercise 5.
+	inline void SetFireMap(ID3D11ShaderResourceView *tex) { fire->SetResource(tex); }
 
 
 
@@ -58,6 +65,13 @@ public:
 	ID3DX11EffectVectorVariable *eyePosWorld = nullptr;
 
 	ID3DX11EffectShaderResourceVariable *diffuseMap = nullptr;
+	// For exercise 3.
+	ID3DX11EffectShaderResourceVariable *flare = nullptr;
+	ID3DX11EffectShaderResourceVariable *flareAlpha = nullptr;
+	// For exercise 2.
+	ID3DX11EffectShaderResourceVariable *mipMap = nullptr;
+	// For exercise 5.
+	ID3DX11EffectShaderResourceVariable *fire = { nullptr };
 
 };
 
@@ -65,7 +79,7 @@ public:
 class Effects {
 public:
 	static void InitAll(ID3D11Device *device);
-	static void	DestoryAll();
+	static void	DestroyAll();
 
 	static BasicEffect *basicFX;
 };

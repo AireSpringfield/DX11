@@ -79,7 +79,8 @@ inline void CreateDDSShaderResourceViewFromFile(ID3D11Device *device, const wcha
 	ID3D11Resource *texResource = nullptr;
 	HR(DirectX::CreateDDSTextureFromFile(device, fileName, &texResource, pShaderResourceView));
 	ReleaseCOM(texResource);
-		
+	
+
 }
 
 #endif

@@ -52,6 +52,11 @@ public:
 
 	void Subdivide(MeshData &mesh_data);
 
+	
+	// Creates a quad covering the screen in NDC coordinates.  This is useful for
+	// postprocessing effects.
+	void CreateFullscreenQuad(MeshData& meshData);
+
 
 	};
 

@@ -12,6 +12,8 @@
 #include <DirectXMath.h>
 #include<DirectXPackedVector.h>
 
+using namespace DirectX;
+
 class MathHelper
 {
 public:

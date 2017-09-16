@@ -83,4 +83,16 @@ inline void CreateDDSShaderResourceViewFromFile(ID3D11Device *device, const wcha
 
 }
 
+
+#include<fstream>
+#include<string>
+#include<vector>
+
+#include"d3dx11effect.h"
+
+#include"lighthelper.h"
+
+
+
+
 #endif

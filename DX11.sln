@@ -27,6 +27,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter 9 Blending-Blend De
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter 10 Stenciling- Mirror Demo", "Chapter 10 Stenciling- Mirror Demo\Chapter 10 Stenciling- Mirror Demo.vcxproj", "{8C092E57-35AB-478E-8D2D-40FCD8BFBCD5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter 11 Geometry Shader- Tree Billboard Demo", "Chapter 11 Geometry Shader- Tree Billboard Demo\Chapter 11 Geometry Shader- Tree Billboard Demo.vcxproj", "{27B2C18F-1120-40FC-A449-E463B83BACAD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter 12 The Compute Shader-Vector Adding Demo", "Chapter 12 The Compute Shader-Vector Adding Demo\Chapter 12 The Compute Shader-Vector Adding Demo.vcxproj", "{5E7B70FD-76A7-4121-8513-93CE206699F7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter 12 The Compute Shader-Blur Demo", "Chapter 12 The Compute Shader-Blur Demo\Chapter 12 The Compute Shader-Blur Demo.vcxproj", "{F8278604-B0AC-4E8E-A7F6-9E542A64A033}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -131,6 +137,30 @@ Global
 		{8C092E57-35AB-478E-8D2D-40FCD8BFBCD5}.Release|x64.Build.0 = Release|x64
 		{8C092E57-35AB-478E-8D2D-40FCD8BFBCD5}.Release|x86.ActiveCfg = Release|Win32
 		{8C092E57-35AB-478E-8D2D-40FCD8BFBCD5}.Release|x86.Build.0 = Release|Win32
+		{27B2C18F-1120-40FC-A449-E463B83BACAD}.Debug|x64.ActiveCfg = Debug|x64
+		{27B2C18F-1120-40FC-A449-E463B83BACAD}.Debug|x64.Build.0 = Debug|x64
+		{27B2C18F-1120-40FC-A449-E463B83BACAD}.Debug|x86.ActiveCfg = Debug|Win32
+		{27B2C18F-1120-40FC-A449-E463B83BACAD}.Debug|x86.Build.0 = Debug|Win32
+		{27B2C18F-1120-40FC-A449-E463B83BACAD}.Release|x64.ActiveCfg = Release|x64
+		{27B2C18F-1120-40FC-A449-E463B83BACAD}.Release|x64.Build.0 = Release|x64
+		{27B2C18F-1120-40FC-A449-E463B83BACAD}.Release|x86.ActiveCfg = Release|Win32
+		{27B2C18F-1120-40FC-A449-E463B83BACAD}.Release|x86.Build.0 = Release|Win32
+		{5E7B70FD-76A7-4121-8513-93CE206699F7}.Debug|x64.ActiveCfg = Debug|x64
+		{5E7B70FD-76A7-4121-8513-93CE206699F7}.Debug|x64.Build.0 = Debug|x64
+		{5E7B70FD-76A7-4121-8513-93CE206699F7}.Debug|x86.ActiveCfg = Debug|Win32
+		{5E7B70FD-76A7-4121-8513-93CE206699F7}.Debug|x86.Build.0 = Debug|Win32
+		{5E7B70FD-76A7-4121-8513-93CE206699F7}.Release|x64.ActiveCfg = Release|x64
+		{5E7B70FD-76A7-4121-8513-93CE206699F7}.Release|x64.Build.0 = Release|x64
+		{5E7B70FD-76A7-4121-8513-93CE206699F7}.Release|x86.ActiveCfg = Release|Win32
+		{5E7B70FD-76A7-4121-8513-93CE206699F7}.Release|x86.Build.0 = Release|Win32
+		{F8278604-B0AC-4E8E-A7F6-9E542A64A033}.Debug|x64.ActiveCfg = Debug|x64
+		{F8278604-B0AC-4E8E-A7F6-9E542A64A033}.Debug|x64.Build.0 = Debug|x64
+		{F8278604-B0AC-4E8E-A7F6-9E542A64A033}.Debug|x86.ActiveCfg = Debug|Win32
+		{F8278604-B0AC-4E8E-A7F6-9E542A64A033}.Debug|x86.Build.0 = Debug|Win32
+		{F8278604-B0AC-4E8E-A7F6-9E542A64A033}.Release|x64.ActiveCfg = Release|x64
+		{F8278604-B0AC-4E8E-A7F6-9E542A64A033}.Release|x64.Build.0 = Release|x64
+		{F8278604-B0AC-4E8E-A7F6-9E542A64A033}.Release|x86.ActiveCfg = Release|Win32
+		{F8278604-B0AC-4E8E-A7F6-9E542A64A033}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

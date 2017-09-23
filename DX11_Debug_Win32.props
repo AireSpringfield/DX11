@@ -13,6 +13,10 @@
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)Common</AdditionalIncludeDirectories>
     </ClCompile>
+    <CustomBuild>
+      <Command>fxc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(RelativeDir)\%(Filename).fx"   </Command>
+      <Outputs>  %(RelativeDir)%(FileName).fxo;%(Outputs)</Outputs>
+    </CustomBuild>
   </ItemDefinitionGroup>
   <ItemGroup />
 </Project>
